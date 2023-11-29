@@ -30,6 +30,12 @@ func NovoAluno(c *gin.Context) {
 		return
 	}
 
+	if err := models.ValidacaoDoAluno(&aluno); err != nil { // Aqui estou aplicando as validações e retornando caso de error
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+		return
+	}
+
 	database.DB.Create(&aluno) // Aqui estou salvando os dados do aluno no banco
 
 	c.JSON(http.StatusOK, aluno)
@@ -83,6 +89,12 @@ func EditarAluno(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&aluno); err != nil { // Aqui estou validando objeto da requisição
 		c.JSON(http.StatusNotFound, gin.H{"Erro": err.Error()})
+		return
+	}
+
+	if err := models.ValidacaoDoAluno(&aluno); err != nil { // Aqui estou aplicando as validações e retornando caso de error
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
 		return
 	}
 
