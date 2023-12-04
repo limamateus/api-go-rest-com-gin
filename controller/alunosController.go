@@ -98,9 +98,9 @@ func EditarAluno(c *gin.Context) {
 		return
 	}
 
-	database.DB.Model(&aluno).UpdateColumns(aluno) // Deleto do banco
+	database.DB.Model(&aluno).UpdateColumns(aluno) // Atualizo no bancos
 
-	c.JSON(http.StatusNoContent, nil) // retorno status de 201 no contant
+	c.JSON(http.StatusOK, aluno) // retorno status de 200 no contant
 }
 
 func BuscarAlunoPorCpf(c *gin.Context) {

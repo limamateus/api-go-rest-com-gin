@@ -4,9 +4,13 @@ import (
 	"api-go-rest-gin/controller"
 	"api-go-rest-gin/database"
 	"api-go-rest-gin/models"
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +20,7 @@ import (
 var ID int
 
 func SetupDasRotasDeTeste() *gin.Engine {
-	gin.SetMode(gin.ReleaseMode) // Retorna os dados dos testes resumido
+	//	gin.SetMode(gin.ReleaseMode) // Retorna os dados dos testes resumido
 	rotas := gin.Default()
 
 	return rotas
@@ -94,4 +98,58 @@ func TestBuscaPorCPF(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, resposta.Code) // Valido se status code é o mesmo que eu esperava
 
+}
+
+func TestBuscaAlunoPorId(t *testing.T) {
+	database.ConexaoComBanco()                                                 // 1 - Inicio uma comunicação com banco
+	CriarAlunoMock()                                                           // 2- Crio um Aluno atraves de uma função mocada
+	defer DeletarAluno()                                                       // 3- Deleto ele depois que tudo for finalizado
+	r := SetupDasRotasDeTeste()                                                // 4 -Inicio uma instacia do Gin
+	r.GET("/alunos/:id", controller.AlunoPorId)                                // 5- Fala a rota que sera usada
+	pathDaBusca := "/alunos/" + strconv.Itoa(ID)                               // 6- Crio a rota que será usada
+	req, _ := http.NewRequest("GET", pathDaBusca, nil)                         // 7- Monto a resposta
+	resposta := httptest.NewRecorder()                                         // 8- Crio uma variavel que irá armazena uma resposta
+	r.ServeHTTP(resposta, req)                                                 // 9 - Realizo uma requisição
+	var alunoMock models.Aluno                                                 // 10 -  criar uma variavel local que irá receber o aluno
+	json.Unmarshal(resposta.Body.Bytes(), &alunoMock)                          // 11- converto a resposta em json e deserealizo na variavel local
+	assert.Equal(t, "Aluno novo", alunoMock.Nome, "Os nomes devem ser iguais") //Realizo as validações
+	assert.Equal(t, "12345678901", alunoMock.CPF)
+	assert.Equal(t, http.StatusOK, resposta.Code)
+}
+
+func TestDeletarAlunoPorId(t *testing.T) {
+	database.ConexaoComBanco() // 1 - Inicio uma comunicação com banco
+	CriarAlunoMock()           // 2- Crio um Aluno atraves de uma função mocada
+
+	r := SetupDasRotasDeTeste()                           // 3 -Inicio uma instacia do Gin
+	r.DELETE("/alunos/:id", controller.DeletarAlunoPorId) // 4- Fala a rota que sera usada
+	pathDaBusca := "/alunos/" + strconv.Itoa(ID)          // 5- Crio a rota que será usada
+	req, _ := http.NewRequest("DELETE", pathDaBusca, nil) // 6- Monto a resposta
+	resposta := httptest.NewRecorder()                    // 7- Crio uma variavel que irá armazena uma resposta
+	r.ServeHTTP(resposta, req)                            // 8 - Realizo uma requisição
+	assert.Equal(t, http.StatusNoContent, resposta.Code)  // Realizo a validação do status code
+
+}
+
+func TestAtualizarAluno(t *testing.T) {
+	database.ConexaoComBanco()                                    // 1 - Inicio uma comunicação com banco
+	CriarAlunoMock()                                              // 2- Crio um Aluno atraves de uma função mocada
+	defer DeletarAluno()                                          // 3- Deleto ele depois que tudo for finalizado
+	r := SetupDasRotasDeTeste()                                   // 4 -Inicio uma instacia do Gin
+	r.PATCH("/alunos/:id", controller.EditarAluno)                // 5- Fala a rota que sera usada
+	aluno := models.Aluno{Nome: "Atualizado", CPF: "41123456789"} // 6- Crio uma variavel local que será usada para atualizar o aluno
+	valorJson, _ := json.Marshal(aluno)                           // 7- Converto o aluno para um json
+	pathDaBusca := "/alunos/" + strconv.Itoa(ID)                  // 8- Monto a rota
+	fmt.Println(ID)
+	req, _ := http.NewRequest("PATCH", pathDaBusca, bytes.NewBuffer(valorJson)) // 9- Monto a requesição
+	resposta := httptest.NewRecorder()                                          // 10-  Crio a variavel local que será usada para armazenar a respota da requisição
+	r.ServeHTTP(resposta, req)                                                  // 11- Realizo a requisição
+	var alunoMockAtualizado models.Aluno                                        // 12- crio um variavel local do tipo aluno
+	json.Unmarshal(resposta.Body.Bytes(), &alunoMockAtualizado)                 // 13- Converto em Json
+	assert.Equal(t, "Atualizado", alunoMockAtualizado.Nome)                     // Realizo as validações
+	assert.Equal(t, "41123456789", alunoMockAtualizado.CPF)
+
+	fmt.Println(alunoMockAtualizado)
+
+	assert.Equal(t, http.StatusOK, resposta.Code)
 }
