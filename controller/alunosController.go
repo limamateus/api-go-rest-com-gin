@@ -101,7 +101,7 @@ func AlunoPorId(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "ID"
-// @Success      200  {object}  models.Aluno
+// @Success      201
 // @Failure      400  {object}  httputil.HTTPError
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
