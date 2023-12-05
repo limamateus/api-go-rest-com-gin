@@ -6,8 +6,20 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/swaggo/swag/example/celler/httputil"
 )
 
+// ListaDeAlunos godoc
+// @Summary      Lista de Alunos
+// @Description  objetivo é retornar uma lista de aluno atraves
+// @Tags         Aluno
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  models.Aluno
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       / [get]
 func ListaDeAlunos(c *gin.Context) {
 	var alunos []models.Aluno // Aqui estou criando uma variavel que irá representar uma lista de alunos
 	database.DB.Find(&alunos) // depois vou no banco e passo os dados para variavel
@@ -21,6 +33,19 @@ func Saudacao(c *gin.Context) {
 	})
 }
 
+// NovoAluno godoc
+//
+//	@Summary		Novo Aluno
+//	@Description	Objetivo é cadastra um novo Aluno
+//	@Tags			Aluno
+//	@Accept			json
+//	@Produce		json
+//	@Param			Aluno	body		models.Aluno	true	"Add Aluno"
+//	@Success		200		{object}	models.Aluno
+//	@Failure		400		{object}	httputil.HTTPError
+//	@Failure		404		{object}	httputil.HTTPError
+//	@Failure		500		{object}	httputil.HTTPError
+//	@Router			/alunos/novo [post]
 func NovoAluno(c *gin.Context) {
 	var aluno models.Aluno // Aqui eu instacio uma variavel do tipo aluno
 
@@ -41,6 +66,18 @@ func NovoAluno(c *gin.Context) {
 	c.JSON(http.StatusOK, aluno)
 }
 
+// AlunoPorId godoc
+// @Summary      Buscar um Aluno Por Id
+// @Description  objetivo é retornar uma aluno atraves do seu id
+// @Tags         Aluno
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "ID"
+// @Success      200  {object}  models.Aluno
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /alunos/{id} [get]
 func AlunoPorId(c *gin.Context) {
 	var aluno models.Aluno // Aqui eu crio uma variavel local que irá representar o aluno
 
@@ -57,6 +94,18 @@ func AlunoPorId(c *gin.Context) {
 	c.JSON(http.StatusOK, aluno) // Caso de tudo certo retorno o aluno e status ok
 }
 
+// DeletarAlunoPorId godoc
+// @Summary      Deletar aluno
+// @Description  objetivo é deletar um aluno atraves do seu id
+// @Tags         Aluno
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "ID"
+// @Success      200  {object}  models.Aluno
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /alunos/{id} [delete]
 func DeletarAlunoPorId(c *gin.Context) {
 	id := c.Params.ByName("id") // Aqui estou pegando o Id da rota
 
@@ -75,6 +124,22 @@ func DeletarAlunoPorId(c *gin.Context) {
 
 }
 
+// EditarAluno godoc
+//
+//	@Summary		Atualizar um Aluno
+//	@Description	Objetivo é atualizar um Aluno existente
+//	@Tags			Aluno
+//	@Accept			json
+//	@Produce		json
+//
+// @Param        id   path      int  true  "ID"
+//
+//	@Param			Aluno	body		models.Aluno	true	"Add Aluno"
+//	@Success		200		{object}	models.Aluno
+//	@Failure		400		{object}	httputil.HTTPError
+//	@Failure		404		{object}	httputil.HTTPError
+//	@Failure		500		{object}	httputil.HTTPError
+//	@Router			/alunos/{id} [patch]
 func EditarAluno(c *gin.Context) {
 	id := c.Params.ByName("id") // Aqui estou pegando o Id da rota
 

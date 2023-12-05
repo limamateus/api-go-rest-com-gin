@@ -9,9 +9,9 @@ import (
 )
 
 type Aluno struct {
-	gorm.Model
-	Nome string `json:"nome" validate:"required"`
-	CPF  string `json:"cpf" validate:"required,len=11"`
+	gorm.Model `json:"-"`
+	Nome       string `json:"nome" validate:"required"`
+	CPF        string `json:"cpf" validate:"required,len=11"`
 }
 
 func ValidacaoDoAluno(aluno *Aluno) error {
