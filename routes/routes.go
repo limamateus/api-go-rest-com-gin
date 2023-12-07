@@ -16,6 +16,7 @@ func HendlerRequest() {
 	r.Static("/assets", "./assets") // Aqui estou definindo e configurando onde o gin irá pegar o arquivo de css e passa nas paginas
 	//Rota que será usada para Swagger
 	docs.SwaggerInfo.BasePath = "/"
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Rotas de Api
 	r.GET("/", controller.ListaDeAlunos)
@@ -28,7 +29,8 @@ func HendlerRequest() {
 	// Rotas que irá exibir paginas em Html com Gin
 	r.GET("/index", controller.ExibePaginaIndex)
 	r.GET("/listaDeAlunos", controller.ExibeListaDeAlunosEmHtml)
-
+	r.POST("/login/Novo", controller.NovoUsuario)
+	r.POST("/login", controller.Login)
 	r.NoRoute(controller.RotasNaoEncontradas)
 	r.Run()
 }

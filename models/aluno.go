@@ -16,6 +16,7 @@ type Aluno struct {
 
 func ValidacaoDoAluno(aluno *Aluno) error {
 	validate := validator.New()
+
 	if err := validate.Struct(aluno); err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
 			return err
@@ -35,5 +36,6 @@ func ValidacaoDoAluno(aluno *Aluno) error {
 
 		return errors.New("Erros de validação: " + strings.Join(fieldErrors, ", "))
 	}
+
 	return nil
 }

@@ -1,4 +1,12 @@
 definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
   httputil.HTTPError:
     properties:
       code:
@@ -17,6 +25,30 @@ definitions:
     required:
     - cpf
     - nome
+    type: object
+  models.Login:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      id:
+        type: integer
+      senha:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      nome:
+        type: string
+      senha:
+        type: string
     type: object
 info:
   contact: {}
@@ -183,4 +215,72 @@ paths:
       summary: Novo Aluno
       tags:
       - Aluno
+  /login/:
+    post:
+      consumes:
+      - application/json
+      description: Objetivo é autenticar
+      parameters:
+      - description: Add Login
+        in: body
+        name: Login
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Login'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Novo Login
+      tags:
+      - Login
+  /login/Novo:
+    post:
+      consumes:
+      - application/json
+      description: Objetivo é cadastra um novo User
+      parameters:
+      - description: Add User
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Novo User
+      tags:
+      - User
 swagger: "2.0"

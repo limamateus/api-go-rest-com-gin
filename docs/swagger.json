@@ -248,9 +248,125 @@
                     }
                 }
             }
+        },
+        "/login/": {
+            "post": {
+                "description": "Objetivo é autenticar",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Novo Login",
+                "parameters": [
+                    {
+                        "description": "Add Login",
+                        "name": "Login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Login"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/login/Novo": {
+            "post": {
+                "description": "Objetivo é cadastra um novo User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Novo User",
+                "parameters": [
+                    {
+                        "description": "Add User",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
         "httputil.HTTPError": {
             "type": "object",
             "properties": {
@@ -275,6 +391,43 @@
                     "type": "string"
                 },
                 "nome": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Login": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "senha": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "senha": {
                     "type": "string"
                 }
             }

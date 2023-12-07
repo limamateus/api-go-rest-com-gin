@@ -23,5 +23,7 @@ func ConexaoComBanco() {
 	}
 
 	DB.AutoMigrate(&models.Aluno{})
+	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Login{})
 
 }
